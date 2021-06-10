@@ -1,0 +1,115 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}Search for {{ search }}{% endblock %}
+
+
+{% block side_content %}				
+<div class="blog-comment">
+	<h3 class="text-success">Random Recipe</h3>
+	<hr/>
+	
+	{% for item in data %}
+		<div class="row">
+		<div class="col-sm-6 side_produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+				</a>
+			</center>
+		</div>	
+		
+		<div class="col-sm-6 side_produk">			
+			<div >
+				<a class="side_title" href="{% url 'detail' item.id %}">
+				<p style="line-height:20px">{{ item.title }}</p>
+				</a><br>
+			</div>
+		</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}		
+<div class="col-md-8">
+	{% if data %}
+	<p class="custom_font" style="font-size: 2rem;">Recipe with keyword <b>"{{ search }}"</b></p>
+	{% for i in data %}
+		<div class="row search_item">
+			<div class="col-md-4">
+			<img class="normal" src="{{i.image}}">
+			</div>
+			<div class="col-md-8">				
+				<table>
+					<tr>
+						<td class="table_size">Nama</td>
+						<td><a class="comment_text" href="{% url 'detail' i.id %}">{{ i.title }}</a></td>
+					</tr>
+					<tr>
+						<td>Kesulitan</td>
+						<td>{{ i.difficulty }}</td>
+					</tr>
+					<tr>
+						<td>Suka</td>
+						<td>{{ i.like_count }}</td>
+					</tr>
+					<tr>
+						<td>Penulis</td>
+						<td><a class="comment_text" href="{% url 'profile' i.user.id %}">{{ i.user }}</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		{% endfor %}
+		
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+			{% if data.has_previous %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ data.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}#here">Previous</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+				</li>
+			{% endif %}
+
+			{% if data.number|add:'-4' > 1 %}
+				<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'-5' }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}#here">&hellip;</a></li>
+			{% endif %}
+
+			{% for i in data.paginator.page_range %}
+			{% if data.number == i %}
+				<li class="page-item active" aria-current="page">
+					<span class="page-link">
+					{{ i }}
+					</span>
+				</li>
+			{% elif i > data.number|add:'-5' and i < data.number|add:'5' %}
+				<li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}#here">{{ i }}</a></li>
+			{% endif %}
+			{% endfor %}
+
+			{% if data.paginator.num_pages > data.number|add:'4' %}
+				<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'5' }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}#here">&hellip;</a></li>
+			{% endif %}
+
+			{% if data.has_next %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ data.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}#here">Next</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+				</li>
+			{% endif %}
+			</ul>
+		</nav>
+		
+		{% else %}
+		<p class="custom_font" style="font-size: 2rem;">NO Recipe with keyword <b>"{{ search }}"</b></p>
+		{% endif %}
+</div>		
+
+{% endblock %}

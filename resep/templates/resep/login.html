@@ -1,0 +1,66 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}Please Login{% endblock %}
+
+
+{% block side_content %}
+<div class="blog-comment">
+	<h3 class="text-success">Random Recipe</h3>
+	<hr/>
+	
+	{% for item in data %}
+		<div class="row">
+		<div class="col-sm-6 side_produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+				</a>
+			</center>
+		</div>	
+		
+		<div class="col-sm-6 side_produk">			
+			<div >
+				<a class="side_title" href="{% url 'detail' item.id %}">
+				<p style="line-height:20px">{{ item.title }}</p>
+				</a><br>
+			</div>
+		</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="col-md-8"> 
+	<p class="custom_font"> Login Users</p>
+		<div class="alert alert-info">
+			{% if message %}
+				{{ message }}
+			{% else %}
+				Masukkan username dan password untuk login,...
+			{% endif %}
+		</div>
+	<br>
+	
+	<div class="logincontainer">
+		<form method="post" action="{% url 'login' %}">
+			{% csrf_token %}
+			<div class="form-group">
+				<label >Username</label>
+				<input autofocus class="form-control" type="text" name="username" placeholder="Username" onkeyup="nospaces(this)">
+			</div>
+
+			<div class="form-group">
+				<label for="inputPassword">Password</label>
+				<input class="form-control" type="password" name="password" placeholder="Password">
+			</div>
+			<br><br>
+			<div align="center">
+				<input name="login" type="submit" class="btn btn-primary" value="Login"> <a href="{% url 'register' %}" title="Mari gabung bersama Kami" class="btn btn-default">Belum Punya Akun?</a>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

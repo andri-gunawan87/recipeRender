@@ -1,0 +1,175 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block side_content %}
+<div class="blog-comment">
+	<h3 class="text-success">All {{ comments.0.user }} Comments</h3>
+	<hr/>
+	{% if comments %}
+	<ul class="comments">		
+		{% for comment in comments %}
+		<li class="clearfix">
+		  <div class="post-comments">
+			  <p class="meta"><a class="comment_text" href="{% url 'detail' comment.rec.id %}">{{ comment.rec.title }}</a></p>
+			  <p class="user_comment">
+				  {{ comment.comment }}
+			  </p>
+				<a class="comment_text username_comments" href="{% url 'profile' comment.user.id %}">{{ comment.user }}</a>
+		  </div>
+		</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+	Dont have any Comments
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="card">
+			<img src="{% static 'image/def_profile.svg' %}#svgView(viewBox(895, 268, 90, 210))" height=275px; alt="Avatar">
+			</div>
+		</div>
+				
+		<div class="col-sm-8">
+			<p class="custom_font" style="font-size: 4rem;">{{ data_all.0.user }}</p>
+			<table class="tab_pad">
+					<tr>
+						<td class="profile_table">Tanggal Bergabung:</td>
+						<td>{{ data_all.0.user.date_joined|date:"D d M Y" }}</a></td>
+					</tr>
+					<tr>
+						<td>Resep:</td>
+						<td>{{ data_all|length }} Resep</td>
+					</tr>
+					<tr>
+						<td>Resep Favorit: </td>
+						<td>{{ fav|length }} Resep</td>
+					</tr>
+				</table>
+			<p> </p>
+			<p></p>
+			<p></p>
+			<p></p>
+		
+		</div>
+	</div>
+	<hr>
+	<div class="row">				
+		<div>
+			<div class="accordion accordion-flush" id="accordionFlushExample"></div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingOne">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+					<b>Resep Favorit:</b>
+					</button>
+					</h2>
+					<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							<div class="row">
+							{% if fav %}
+								{% for item in fav %}
+									<div class="col-sm-3 produk">
+										<center>
+											<a href="{% url 'detail' item.rec.id %}">
+											<img class="normal" src="{{item.rec.image}}">
+										</center>
+										<div class="sedikit_info">
+											<p style="line-height:20px">{{ item.rec.title }}</p>
+											<span style="color:green;">Kesulitan: {{ item.rec.difficulty }}</span><br><b>Suka: {{ item.rec.like_count }}</b><br>
+											</a><br>
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								Tidak ada Resep Favorit
+							{% endif %}
+							
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		<div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="flush-headingTwo">
+				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+				<b id="here">List Resep:</b>
+				</button>
+				</h2>
+				<div id="flush-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+					<div class="accordion-body" >
+						<div class="row">
+						{% if data %}
+							{% for item in data %}
+								<div class="col-sm-3 produk">
+									<center>
+										<a href="{% url 'detail' item.id %}">
+										<img class="normal" src="{{item.image}}">
+									</center>
+									<div class="sedikit_info">
+										<p style="line-height:20px">{{ item.title }}</p>
+										<span style="color:green;">Kesulitan: {{ item.difficulty }}</span><br><b>Suka: {{ item.like_count }}</b><br>
+										</a><br>
+									</div>
+								</div>
+							{% endfor %}
+						{% else %}
+							Tidak ada Resep yang dibuat
+						{% endif %}							
+							<hr>
+							<nav aria-label="Page navigation example">
+								<ul class="pagination justify-content-center">
+								{% if data.has_previous %}
+									<li class="page-item">
+										<a class="page-link" href="?page={{ data.previous_page_number }}#here">Previous</a>
+									</li>
+								{% else %}
+									<li class="page-item disabled">
+										<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+									</li>
+								{% endif %}
+
+								{% if data.number|add:'-4' > 1 %}
+									<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'-5' }}#here">&hellip;</a></li>
+								{% endif %}
+
+								{% for i in data.paginator.page_range %}
+								{% if data.number == i %}
+									<li class="page-item active" aria-current="page">
+										<span class="page-link">
+										{{ i }}
+										</span>
+									</li>
+								{% elif i > data.number|add:'-5' and i < data.number|add:'5' %}
+									<li class="page-item"><a class="page-link" href="?page={{ i }}#here">{{ i }}</a></li>
+								{% endif %}
+								{% endfor %}
+
+								{% if data.paginator.num_pages > data.number|add:'4' %}
+									<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'5' }}#here">&hellip;</a></li>
+								{% endif %}
+
+								{% if data.has_next %}
+									<li class="page-item">
+										<a class="page-link" href="?page={{ data.next_page_number }}#here">Next</a>
+									</li>
+								{% else %}
+									<li class="page-item disabled">
+										<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+									</li>
+								{% endif %}
+								</ul>
+							</nav>
+						</div>				
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>			
+	
+{% endblock %}

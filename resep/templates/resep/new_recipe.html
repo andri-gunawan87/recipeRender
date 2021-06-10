@@ -1,0 +1,97 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}New Recipe{% endblock %}
+
+
+{% block side_content %}
+<div class="blog-comment">
+	<h3 class="text-success">Random Recipe</h3>
+	<hr/>
+	
+	{% for item in data %}
+		<div class="row">
+		<div class="col-sm-6 side_produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+				</a>
+			</center>
+		</div>	
+		
+		<div class="col-sm-6 side_produk">			
+			<div >
+				<a class="side_title" href="{% url 'detail' item.id %}">
+				<p style="line-height:20px">{{ item.title }}</p>
+				</a><br>
+			</div>
+		</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8"> 
+	<p class="custom_font">New Recipe</p>
+	<br>
+	{% if user.is_authenticated %}
+	<div class="logincontainer">
+		<form method="post" action="{% url 'new_recipe' %}">
+			{% csrf_token %}
+			<table class="table_input">
+				<tr>
+					<td class="cell_form">Nama Resep</td>
+					<td class="cell_input"><input id="rec_name" class="form-control" type="text" name="rec_name" placeholder="Nama Resep"></td>
+				</tr>
+				<tr>
+					<td>Image</td>
+					<td><input id="rec_img" class="form-control" type="text" name="rec_img" placeholder="Link Gambar"></td>
+				</tr>
+				<tr>
+					<td>Kesulitan </td>
+					<td><input id="rec_dif" class="form-control" type="text" name="rec_dif" placeholder="Tingkat Kesulitan"></td>
+				</tr>
+				<tr>
+					<td>Waktu</td>
+					<td><input id="rec_time" class="form-control" type="text" name="rec_time" placeholder="Waktu Memasak"></td>
+				</tr>
+				<tr>
+					<td>Deskripsi</td>
+					<td>
+					<textarea id="rec_desc" name="rec_desc" rows="4" style="width: 100%;" placeholder=" Deskripsi Resep"></textarea>
+				</tr>
+			</table>
+			<div class="row" style="margin-bottom: 20px">
+				<div class="col-md-5">
+					<p class="form_bahan">Bahan-bahan</p>
+					<div id="ingadd" name="ingadd" type="1">
+						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 1">
+						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 2">
+						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 3">
+					</div>					
+					<button id="ingbtn" class="btn btn-secondary" type="button">Tambah Bahan</button>
+				</div>
+				
+				<div class="col-md-7">
+				<p class="form_bahan">Langkah Penyajian</p></p>
+					<div id="stepadd" type="1">
+						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 1"></textarea>
+						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 2"></textarea>
+						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 3"></textarea>
+					</div>					
+					<div >
+					</div>
+					<button id="stepbtn" class="btn btn-secondary" type="button">Tambah Langkah</button>
+				</div>
+			</div>
+			<input class="btn btn-primary" type="submit" value="Buat Resep">
+		</form>
+	</div>
+	{% else %}
+	<div class="alert alert-info">
+		Anda Harus Login Untuk Membuat Resep Baru
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block side_content %}				
+<div class="blog-comment">
+	<h3 class="text-success">Random Recipe</h3>
+	<hr/>
+	
+	{% for item in data %}
+		<div class="row">
+		<div class="col-sm-6 side_produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+				</a>
+			</center>
+		</div>	
+		
+		<div class="col-sm-6 side_produk">			
+			<div >
+				<a class="side_title" href="{% url 'detail' item.id %}">
+				<p style="line-height:20px">{{ item.title }}</p>
+				</a><br>
+			</div>
+		</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8">
+	<p class="custom_font"> Pendaftaran Members</p>
+	<div class="alert alert-info">
+		{% if message %}
+		{{ message }}
+		{% else %}
+		<b>PENTING!</b> - Contact informations				
+		{% endif %}
+	</div>
+	<br>
+	<form action="{% url 'register' %}" method="post" class="regist">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="inputEmail3" class="control-label">Email</label>
+			<div>
+				<div style="background:#fff;" class="input-group col-sm-12">
+					<input class="form-control" type="email" name="email" placeholder="Email Address">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-3 control-label">Username</label>
+			<div>
+				<div style="background:#fff;" class="input-group col-sm-6">
+					<input class="form-control" autofocus type="text" name="username" placeholder="Username" onkeyup="nospaces(this)">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-3 control-label">Password</label>
+			<div>
+				<div style="background:#fff;" class="input-group col-sm-6">
+					<input class="form-control" type="password" name="password" placeholder="Password" onkeyup="nospaces(this)">
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="inputEmail3" class="col-sm-3 control-label">Konfirmasi Password</label>
+			<div>
+				<div style="background:#fff;" class="input-group col-sm-6">
+					<input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" onkeyup="nospaces(this)">
+				</div>
+			</div>
+		</div>
+
+		<br>
+		<div class="form-group">
+			<div align="center">
+				<input class="btn btn-primary" type="submit" value="Daftar">
+				<a class="btn btn-default" href="{% url 'login' %}">Sudah Punya Akun?</a>
+			</div>
+		</div>
+	</form>
+
+</div>
+{% endblock %}

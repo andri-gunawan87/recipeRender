@@ -1,0 +1,90 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}All Recipe{% endblock %}
+
+
+{% block side_content %}				
+<div class="blog-comment">
+<h3 class="text-success">Latest Comments</h3>
+<hr/>
+<ul class="comments">
+	{% for comment in comments %}
+	<li class="clearfix">
+	  <div class="post-comments">
+		  <p class="meta"><a class="comment_text" href="{% url 'detail' comment.rec.id %}">{{ comment.rec.title }}</a></p>
+		  <p class="user_comment">
+			  {{ comment.comment}}
+		  </p>
+			<p class="username_comments">{{ comment.user }}</p>
+	  </div>
+	</li>
+	{% endfor %}
+</ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8">
+	<p class="custom_font">All Recipe</p>
+	<div class="row">			
+		{% for item in data %}
+		<div class="col-sm-3 produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+			</center>
+			<div class="sedikit_info">
+				<p style="line-height:20px">{{ item.title }}</p>
+				<span style="color:green;">Kesulitan: {{ item.difficulty }}</span><br><b>Suka: {{ item.like_count }}</b><br>
+				</a><br>
+			</div>
+		</div>
+		{% endfor %}
+		<hr>
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+			{% if data.has_previous %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ data.previous_page_number }}#here">Previous</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+				</li>
+			{% endif %}
+
+			{% if data.number|add:'-4' > 1 %}
+				<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'-5' }}#here">&hellip;</a></li>
+			{% endif %}
+
+			{% for i in data.paginator.page_range %}
+			{% if data.number == i %}
+				<li class="page-item active" aria-current="page">
+					<span class="page-link">
+					{{ i }}
+					</span>
+				</li>
+			{% elif i > data.number|add:'-5' and i < data.number|add:'5' %}
+				<li class="page-item"><a class="page-link" href="?page={{ i }}#here">{{ i }}</a></li>
+			{% endif %}
+			{% endfor %}
+
+			{% if data.paginator.num_pages > data.number|add:'4' %}
+				<li class="page-item"><a class="page-link" href="?page={{ data.number|add:'5' }}#here">&hellip;</a></li>
+			{% endif %}
+
+			{% if data.has_next %}
+				<li class="page-item">
+					<a class="page-link" href="?page={{ data.next_page_number }}#here">Next</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+				</li>
+			{% endif %}
+			</ul>
+		</nav>
+	</div>				
+</div>
+{% endblock %}

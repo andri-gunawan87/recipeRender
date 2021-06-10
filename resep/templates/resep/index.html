@@ -1,0 +1,59 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}Welcome to Book Recipe{% endblock %}
+
+{% block side_content %}
+<div class="blog-comment">
+	<h3 class="text-success">Latest Comments</h3>
+	<hr/>
+	<ul class="comments">
+		{% for comment in comments %}
+		<li class="clearfix">
+		  <div class="post-comments">
+			  <p class="meta"><a class="comment_text" href="{% url 'detail' comment.rec.id %}">{{ comment.rec.title }}</a></p>
+			  <p class="user_comment">
+				  {{ comment.comment}}
+			  </p>
+				<a class="comment_text username_comments" href="{% url 'profile' comment.user.id %}">{{ comment.user }}</a>
+		  </div>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 index_carousel">
+ <!-- Slideshow container -->
+	<center>
+	<p class="custom_font">Highlight</p>
+	<div class="slideshow-container bg">
+	{% for car in carousel %}
+		<div class="mySlides">
+			<img src="{{ car.image }}" style="width:75%">
+			<div><a href="{% url 'detail' car.id %}">{{ car.title }}</a></div>
+		</div>
+	{% endfor %}
+		<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+		<a class="next" onclick="plusSlides(1)">&#10095;</a>
+	</div>
+	</center>
+	<div class="row">
+		<p class="custom_font cust_title"> &nbsp; Latest Recipe</p><hr>
+		{% for item in data %}
+		<div class="col-sm-3 produk">
+			<center>
+				<a href="{% url 'detail' item.id %}">
+				<img class="normal" src="{{item.image}}">
+			</center>
+			<div class="sedikit_info">
+				<p class="title_link">{{ item.title }}</p>
+				<span class="title_link">Kesulitan: {{ item.difficulty }}<br><b>Suka: {{ item.like_count }}</b><br></span>
+				</a><br>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>	
+{% endblock %}

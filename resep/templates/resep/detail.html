@@ -1,0 +1,157 @@
+{% extends "resep/layout.html" %}
+{% load static %}
+
+{% block title %}{{ data.title }}{% endblock %}
+
+
+{% block side_content %}
+<div class="blog-comment">
+	{% if user.is_authenticated %}
+	<div style="margin-top:40px;">
+		<p>ADD COMMENT</p>
+		<form action="{% url 'addcomment'  %}" method="POST">
+			{% csrf_token %}
+			<textarea class="textarea" name="textarea" style="width: 100%;"></textarea>
+			<input type="hidden" name="data_id" value="{{ data.id }}">
+			<input class="addcomment_button" id = "addcomment" type="submit" value="Add Comment">
+		</form>
+		</div>
+		{% endif %}
+	<h3 class="text-success">Comments</h3>
+	<hr/>
+	<ul class="comments">
+		{% for comment in comments %}
+		<li class="clearfix">
+		  <div class="post-comments">
+			  <p class="meta"><a class="comment_text" href="{% url 'detail' comment.rec.id %}">{{ comment.rec.title }}</a></p>
+			  <p class="user_comment">
+				  {{ comment.comment}}
+			  </p>
+				<a class="comment_text username_comments" href="{% url 'profile' comment.user.id %}">{{ comment.user }}</a>
+		  </div>
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}
+
+
+{% block content %}
+		<div class="col-md-8">
+		<div class="row like_menu">
+		<div class="col-sm-6">		
+		
+		</div>
+		<div class="col-sm-6">
+		{% if user.is_authenticated %}
+			<div class="fav_button">
+				<form  action="{% url 'favorite' %}" method="post">
+					{% csrf_token %}
+					<input id="fav" type="hidden" name="fav" value="{{ data.id }}">
+					{% if favorite.fav == True %}		
+					<input type="submit" class="btn btn-danger" value="Hapus dari Menu Favorite">											
+					{% else %}
+					<input type="submit" class="btn btn-primary" value="Tambah ke Menu Favorite">
+					{% endif %}					
+				</form>
+			</div>
+		{% endif %}
+		</div>
+		<hr></div>
+			<div class="row search_item">
+				<div class="col-md-4">
+					<img class="detail_img" src="{{data.image}}">
+					{% if user.is_authenticated %}
+					<div class="like_form">
+						<form action="{% url 'like' data.id %}" method="POST">
+						{% csrf_token %}
+						{% if likes.like == True %}
+							<button name="like" id="like_dis" value="like" type="submit" class="btn btn-outline-primary" onclick="like_counter({{ data.id }})"; disabled/><i class="icon-up-open"></i></button>
+						{% else %}
+							<button name="like" id="like_en" value="like" type="submit" data-toggle="button" class="btn btn-outline-primary" onclick="like_counter({{ data.id }})";/><i class="icon-up-open"></i></button>
+						{% endif %}
+							<span id="like_{{ data.id }}">{{ data.like_count }}</span>
+						{% if likes.dislike == True %}
+							<button name="like" id="dislike_dis" value="dislike" type="submit" class="btn btn-outline-danger" onclick="dislike_counter({{ data.id }})"; disabled><i class="icon-down-open"></i></button>
+						{% else %}
+							<button name="like" id="dislike_en" value="dislike" type="submit" class="btn btn-outline-danger" onclick="dislike_counter({{ data.id }})";><i class="icon-down-open"></i></button>
+						{% endif %}
+							</form>
+					</div>
+					{% else %}
+					<div class="like_form">
+						<form>
+						<button name="like" id={{ data.id }} value="like" type="submit" class="btn btn-outline-primary" onclick="like_counter(this.id)"; disabled/><i class="icon-up-open"></i></button>
+						<span id="like_{{ data.id }}">{{ data.like_count }}</span>
+						<button name="like" id={{ data.id }} value="dislike" type="submit" class="btn btn-outline-danger" onclick="dislike_counter(this.id)"; disabled><i class="icon-down-open"></i></button>
+						</form>
+					</div>
+					{% endif %}
+				</div>
+				
+				<div class="col-md-8">				
+					<table>
+						<tr>
+							<td class="table_size">Nama</td>
+							<td><a class="comment_text" href="{% url 'detail' data.id %}">{{ data.title }}</a></td>
+						</tr>
+						<tr>
+							<td>Kesulitan</td>
+							<td>{{ data.difficulty }}</td>
+						</tr>
+						<tr>
+							<td>Waktu </td>
+							<td>{{ data.times }}</td>
+						</tr>
+						<tr>
+							<td>Penulis</td>
+							<td><a class="comment_text" href="{% url 'profile' data.user.id %}">{{ data.user }}</a></td>
+						</tr>
+					</table>
+					
+				</div>
+			</div>
+				<hr>
+				<hr>
+				<p>Deskripsi:</p>
+				<div id="ellipsis-ex" class="text-desc" onclick="toggleEllipsis()">				
+					<p>{{ data.desc }}</p>
+				</div>
+			<div class="row">				
+				<div class="col-md-6"><div class="accordion accordion-flush" id="accordionFlushExample"></div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingOne">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+					<b>Bahan-Bahan:</b>
+					</button>
+					</h2>
+					<div id="flush-collapseOne" class="accordion-collapse collapse show" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							<ul>
+							{% for i in data.ingredient %}		 
+								<li>{{ i }}</li>		 
+							{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="col-md-6">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="flush-headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+					<b>Langkah Penyajian:</b>
+					</button>
+					</h2>
+					<div id="flush-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">
+							{% for i in data.step %}
+								<p>  {{ i }}</p>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>			
+		</div>	
+{% endblock %}

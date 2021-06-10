@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<title>{% block title %}Resep{% endblock %}</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+        <link href="{% static 'resep/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'resep/fontello.css' %}" rel="stylesheet">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Niconne&display=swap" rel="stylesheet"> 
+	</head>
+	<body>		
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+						<div class="custom_font custom_navbar"><b>
+							<a href="{% url 'index' %}" class="hyper_link">Home</a><br>
+							{% if user.is_authenticated %}
+							<a href="{% url 'profile' user.id %}" class="hyper_link">{{ user.username }}</a><br>
+							{% else %}
+							</b>User<b><br>
+							{% endif %}
+							<a href="{% url 'all_recipe' %}" class="hyper_link">All Recipe</a><br>
+							<a href="{% url 'new_recipe' %}" class="hyper_link">New Recipe</a><br>
+							{% if user.is_authenticated %}
+							<a href="{% url 'logout' %}" class="hyper_link">Logout</a><br>
+							{% else %}
+							<a href="{% url 'login' %}" class="hyper_link">Login</a><br>
+							{% endif %}							
+							<form class="d-flex search" action="{% url 'search' %}" method="get">
+								<input class="form-control me-2" type="text" name="q" placeholder="Search" aria-label="Search"><br>
+							</form></b>
+						</div>
+						
+						{% block side_content %}
+						{% endblock %}
+				</div>
+				
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+		<footer class="bg-light text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    Built in data from 
+    <a class="text-dark" href="https://github.com/tomorisakura/unofficial-masakapahariini-api"><b>Masakapahariini Api</b></a><br>
+	Default user image from
+	<a class="text-dark" href="https://www.vecteezy.com/vector-art/141897-colorful-headshot-vector-icons"><b>www.vecteezy.com</b></a><br>
+	Fancy Font using 
+	<a class="text-dark" href="https://fonts.google.com/specimen/Niconne"><b>Niconne Font</b></a><br>
+  </div>
+  <!-- Copyright -->
+</footer>
+	</body>
+	{% block script %}
+	<script src="{% static 'resep/resep.js' %}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+	{% endblock %}
+</html>
