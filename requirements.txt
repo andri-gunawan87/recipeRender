@@ -4,15 +4,11 @@ cachelib==0.1.1
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
-cs50==6.0.2
 cycler==0.10.0
 Cython==0.29.21
 decorator==4.4.2
 dj-database-url==0.5.0
 Django==3.2.1
-Flask==1.1.2
-flask-requests==0.0.14
-Flask-Session==0.3.2
 gunicorn==20.1.0
 idna==2.10
 imageio==2.9.0
@@ -20,8 +16,6 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 joblib==1.0.0
 kiwisolver==1.3.1
-Markdown==3.3.3
-markdown2==2.3.10
 MarkupSafe==1.1.1
 matplotlib==3.3.3
 networkx==2.5
@@ -33,8 +27,6 @@ pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2020.5
 requests==2.25.1
-scikit-image==0.16.2
-scikit-learn==0.22.1
 scipy==1.5.4
 six==1.15.0
 SQLAlchemy==1.3.20
