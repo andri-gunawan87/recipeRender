@@ -1,0 +1,140 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block title %}Edit Account{% endblock %}
+
+{% block side %}
+<div class="col-md-3">
+	<div class="card border mb-3">
+		<div class="user_profile">
+			<img class="profile_img avatar mb-0 mt-2" src="
+			{% if profile_data.user_avatar %}
+			{{ profile_data.user_avatar.url }}"
+			{% else %}
+			{% static 'network/profile.jpg' %}"
+			{% endif %}
+			alt="{{ user }}"><br>
+			<h2 style="text-align: center"><b>{{ user|title }}</b></h2>
+		</div>
+	</div>
+	<div class="card border mb-3 p-2">
+		<div class="sidebar-block custom_font">
+		{% if user.is_authenticated %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <a class="text-decoration-none" href="{% url 'profil' user.id %}">Profile</a><br>
+			<i class="icon-th-large"></i> <a class="text-decoration-none" href="{% url 'all_posts' %}">All Post</a><br>
+			<i class="icon-users"></i> <a class="text-decoration-none" href="{% url 'sns_friends' user.id %}">Friends</a><br>
+			<i class="icon-logout"></i> <a class="text-decoration-none" href="{% url 'sns_logout' %}">Logout</a>
+		{% else %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <span>Profile</span><br>
+			<i class="icon-th-large"></i> <span>All Post</span><br>
+			<i class="icon-users"></i> <span>Friends</span><br>
+			<i class="icon-login"></i> <a class="text-decoration-none" href="{% url 'sns_login' %}">Login</a>
+		{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block body %}
+		<div class="col-md-9">
+		<div class="middle-wrap">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="d-flex justify-content-center">Account Details</h4>
+				</div>
+				<div class="card-body p-4">
+					<div class="row justify-content-center">
+						<div class="col-lg-4 text-center">
+							<figure class="avatar ms-auto me-auto mb-0 mt-2 w100">
+							{% if profile_data.user_avatar %}
+							<img src="{{ profile_data.user_avatar.url }}" alt="avatar" class="shadow-sm rounded-3 w-100">
+							{% else %}
+							<img src="{% static 'network/profile.jpg' %}" alt="avatar" class="shadow-sm rounded-3 w-100">
+							{% endif %}
+							
+							</figure><h2 class="">{{ user_data.first_name }} {{ user_data.last_name }}</h2>
+							<h4 class="mb-4">{{ profile_data.city }}</h4>
+						</div>
+					</div>
+					<form action="{% url 'account' %}" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">First Name</label>
+								<input type="text" name="first_name"class="form-control" value="{{ user_data.first_name }}">
+							</div>
+						</div>
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Last Name</label>
+								<input type="text" name="last_name" class="form-control" value="{{ user_data.last_name }}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Email</label>
+								<input type="text" name="email" class="form-control" value="{{ user_data.email }}" readonly>
+							</div>
+						</div>
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Country</label>
+								<input type="text" name="country" class="form-control" value="{{ profile_data.country }}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+
+						<div class="col-lg-12 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Address</label>
+								<input type="text" name="address" class="form-control" value="{{ profile_data.address }}">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Town / City</label>
+								<input type="text" name="city" class="form-control" value="{{ profile_data.city }}">
+							</div>
+						</div>
+						<div class="col-lg-6 mb-3">
+							<div class="form-group">
+								<label class="mb-2">Postcode</label>
+								<input type="text" name="postcode" class="form-control" value="{{ profile_data.postcode }}">
+							</div>
+						</div>
+						<div class="col-lg-12 mb-3">
+							<div class="form-group">
+								<label for="file-upload" class="custom-file-upload">
+									<i class="fa fa-cloud-upload"></i> Insert Image Profile </label>
+								<input type="file" name="user_avatar" id="file-upload" value="{{ profile_data.user_avatar }}class="input-file">
+							</div>
+						</div>
+						<div class="col-lg-12 mb-3">
+							<label class="mb-2 text-dark">Description</label>
+							<textarea class="form-control" name="bio" rows="5">{{ profile_data.bio }}</textarea>
+						</div>
+						<div class="col-lg-12">
+							<input class="btn btn-primary login_btn text-center rounded-3" type="submit" value="Save">
+						</div>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+		
+		</div>
+		<div class="col-md-3">
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

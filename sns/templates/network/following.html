@@ -1,0 +1,42 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+{% if allpost %}
+	{% for item in allpost %}
+	<div class='border out_b'>
+		<div class='out_b'>
+			<div class='username'>
+				<a href="{% url 'profil' item.user.id %}">
+					<b>{{ item.user }}</b>
+				</a>&nbsp;&nbsp;
+			</div>
+			<div id="post_body_{{ item.id }}">
+				{{ item.body }}
+			</div>
+			<div>
+				{{ item.date }}
+			</div>
+			{% if user.is_authenticated %}
+			<div>
+				<form action="{% url 'like' item.id %}" method="POST">
+				{% csrf_token %}
+				<input name="like" id={{ item.id }} value="like" type="submit" class="btn btn-light" onclick="like_counter(this.id)";/>
+				<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
+				<input name="like" id={{ item.id }} value="dislike" type="submit" class="btn btn-light" onclick="dislike_counter(this.id)";/>
+				</form>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endfor %}
+{% else %}
+<div class='out_b'>
+You not following anyone.
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/edit.js' %}"></script>
+{% endblock %}

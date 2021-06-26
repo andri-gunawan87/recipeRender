@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+        <link href="{% static 'network/css/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'network/css/fontello.css' %}" rel="stylesheet">		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Niconne&display=swap" rel="stylesheet"> 
+		{% block script %}
+        {% endblock %}
+    </head>
+    <body>
+		<div class="container body">
+			<div class="row">
+				{% block side %}
+				{% endblock %}
+		
+				{% block body %}
+				{% endblock %}
+			</div>
+		</div>
+			
+		{% if allpost.has_other_pages %}
+		<div>		
+			<nav aria-label="Page navigation example">
+			  <ul class="pagination justify-content-center">
+				{% if allpost.has_previous %}
+				  <li class="page-item"><a class="page-link" href="?page={{ allpost.previous_page_number }}">Previous</a></li>
+				{% else %}
+				  <li class="disabled page-item">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+					</li>
+				{% endif %}
+				
+				{% for i in allpost.paginator.page_range %}
+				  {% if allpost.number == i %}
+					<li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+				  {% else %}
+					<li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+				  {% endif %}
+				{% endfor %}
+				
+				{% if allpost.has_next %}
+				  <li class="page-item"><a class="page-link" href="?page={{ allpost.next_page_number }}">Next</a></li>
+				{% else %}
+				  <li class="disabled page-item">
+				  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+					</li>
+				{% endif %}
+			  </ul>
+			</nav>			
+		</div>
+		{% endif %}
+    </body>
+</html>

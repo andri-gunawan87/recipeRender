@@ -1,0 +1,38 @@
+{% extends "network/layout_2.html" %}
+{% block title %}Register{% endblock %}
+
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-4 login_img">
+		</div>
+		<div class="col-md-8 login_form">
+			<div class="login_form">
+				<h2 style="text-align: center;">Register</h2>
+				{% if message %}
+					<div class="alert alert-primary text-center" role="alert">{{ message }}</div>
+				{% endif %}
+				<form action="{% url 'sns_register' %}" method="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<input class="form-control" autofocus type="text" name="username" placeholder="Username">
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="email" name="email" placeholder="Email Address">
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="password" name="password" placeholder="Password">
+					</div>
+					<div class="form-group">
+						<input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+					</div>
+					<input class="btn btn-primary login_btn" type="submit" value="Register">
+				</form>
+				<p style="text-align: center;">Already have an account? <a href="{% url 'sns_login' %}">Log In here.</a><p></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

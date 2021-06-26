@@ -39,7 +39,7 @@
 			{% if message %}
 				{{ message }}
 			{% else %}
-				Masukkan username dan password untuk login,...
+				Masukkan username dan password untuk login!
 			{% endif %}
 		</div>
 	<br>
@@ -61,6 +61,14 @@
 				<input name="login" type="submit" class="btn btn-primary" value="Login"> <a href="{% url 'register' %}" title="Mari gabung bersama Kami" class="btn btn-default">Belum Punya Akun?</a>
 			</div>
 		</form>
+	</div>
+	<div class="text-justify mt-4 bg-info bg-gradient" style="margin-left: 50px;">
+		This Resep App share same account with Sns app and Email app.<br>
+		You can login using same account with Sns and Email app.<br>
+		And if you troublesome with register you can use guest account:<br>
+		<b>Username: emma<br>
+		Password: a</b><br>
+		Plase use Chrome for better experience
 	</div>
 </div>
 {% endblock %}

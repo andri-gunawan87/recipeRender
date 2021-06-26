@@ -1,0 +1,43 @@
+{% extends "network/layout_2.html" %}
+{% load static %}
+
+{% block body %}
+
+    
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 login_img">
+			</div>
+			<div class="col-md-8">				
+				<div class="login_form">
+				{% if message %}
+					<div class="alert alert-primary text-center" role="alert">{{ message }}</div>
+				{% endif %}
+					<h2 style="text-align: center;">Login into your account</h2><br>
+					<form action="{% url 'sns_login' %}" method="post">
+						{% csrf_token %}
+						<div class="form-group">
+							<input autofocus class="form-control" type="text" name="username" placeholder="Username">
+						</div>
+						<div class="form-group">
+							<input class="form-control" type="password" name="password" placeholder="Password">
+						</div>
+						<input class="btn btn-primary login_btn" type="submit" value="Login">
+					</form>
+					<p style="text-align: center;">Don't have an account? <a href="{% url 'sns_register' %}">Register here.</a></p>
+				</div>
+				<div class="text-justify bg-info bg-gradient" style="margin-left: 100px;">
+				This Sns App share same account with Resep app and Email app.<br>
+				You can login using same account with Resep and Email app.<br>
+				And if you troublesome with register you can use guest account:<br>
+				<b>Username: emma<br>
+				Password: a</b><br>
+				Please use Chrome for better experience!
+				</div>
+			</div>
+		</div>
+	</div>
+
+    
+
+{% endblock %}

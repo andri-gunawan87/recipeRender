@@ -217,7 +217,11 @@ def register(request):
                 "data": c,
                 "message": "Passwords must match."
             })
-
+        elif User.objects.filter(email=email).exists():
+            return render(request, "resep/register.html", {
+                "data": c,
+                "message": "Email address already taken."
+            })
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)

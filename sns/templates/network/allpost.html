@@ -1,0 +1,118 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block title %}All Post{% endblock %}
+
+{% block side %}
+<div class="col-md-3">
+	{% if user.is_authenticated %}
+	<div class="card border mb-3">
+		<div class="user_profile">
+			<img class="profile_img avatar mb-0 mt-2" src="
+			{% if profile_data.user_avatar %}
+			{{ profile_data.user_avatar.url }}"
+			{% else %}
+			{% static 'network/profile.jpg' %}"
+			{% endif %}
+			alt="{{ user }}"><br>
+			<h2 style="text-align: center"><b>{{ user|title }}</b></h2>
+		</div>
+	</div>
+	<div class="card border mb-3 p-2">
+		<div class="sidebar-block custom_font">		
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <a class="text-decoration-none" href="{% url 'profil' user.id %}">Profile</a><br>
+			<i class="icon-th-large"></i> <a class="text-decoration-none" href="{% url 'all_posts' %}">All Post</a><br>
+			<i class="icon-users"></i> <a class="text-decoration-none" href="{% url 'sns_friends' user.id %}">Friends</a><br>
+			<i class="icon-logout"></i> <a class="text-decoration-none" href="{% url 'sns_logout' %}">Logout</a>
+		{% else %}
+	<div class="card border mb-3 p-2">
+		<div class="sidebar-block custom_font">
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <span>Profile</span><br>
+			<i class="icon-th-large"></i> <span>All Post</span><br>
+			<i class="icon-users"></i> <span>Friends</span><br>
+			<i class="icon-login"></i> <a class="text-decoration-none" href="{% url 'sns_login' %}">Login</a>
+		{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-9">
+	<div>
+		<p class="display-4 text-center custom_font"><b>All Post</b></p>
+	</div>
+{% for item in allpost %}
+<div class='card border out_b'>
+	<div class='out_b'>
+		<div class="card-body p-0 d-flex">
+			<figure class="avatar me-3">
+			{% if item.user.user_a.user_avatar.url %}
+			<img src="{{item.user.user_a.user_avatar.url}}" alt="avater" class="fr_img shadow-sm rounded-circle w45">
+			{% else %}
+			<img src="{% static 'network/profile.jpg' %}" alt="avater" class="fr_img shadow-sm rounded-circle w45">
+			{% endif %}
+			</figure>
+			<h6 class="mt-1">
+			<a class="text-decoration-none" href="{% url 'profil' item.user.id %}">
+				{% if item.user.get_full_name %}
+				<b>{{ item.user.get_full_name }}</b>
+				{% else %}
+				<b>{{ item.user }}</b>
+				{% endif %}
+			</a>&nbsp;&nbsp;
+			<span class="d-block mt-1 lh-3"> {{ item.date|date:"j E Y" }}</span></h6>
+			<div class="ms-auto">
+			</div>
+			{% if user.is_authenticated and item.user == user %}
+			<button id="edit_button" class="btn btn-link edit_post" value="{{ item.id }}" type="button">Edit</button>
+			{% endif %}
+		</div>
+		<div>
+		{% if item.image %}
+		<img class="mb-0 mt-2 img-fluid" src="{{ item.image.url }}" alt="{{ user }}">
+		{% endif %}
+		</div>
+			<div class="mb-1" id="post_body_{{ item.id }}">
+				<a class="text-decoration-none text-dark" href="{% url 'sns_comments' item.id %}">
+					{{ item.body }}
+				</a>
+			</div>
+			<form class="post_textarea" id={{ item.id }} action="{% url 'post' item.id %}" method="POST">
+				{% csrf_token %}
+				<textarea name="edit" class="form-control" id="textarea_{{ item.id }}"></textarea>
+				<input id="editpost" type="submit" class="btn btn-primary" value="Edit"/>
+			</form>
+		<div class="mb-3">
+		</div>
+		{% if user.is_authenticated and item.user != user %}
+		<div>
+			<form action="{% url 'like' item.id %}" method="POST">
+			{% csrf_token %}
+			<button name="like" id={{ item.id }} value="like" type="submit" class="cus_btn btn btn-outline-primary" onclick="like_counter({{ item.id }})";><i class="icon-up-open"></i></button>
+			<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
+			<button name="like" id={{ item.id }} value="dislike" type="submit" class="cus_btn btn btn-outline-danger" onclick="dislike_counter({{ item.id }})";><i class="icon-down-open"></i></button>
+			<a href="{% url 'sns_comments' item.id %}" class="ms-3 text-dark  text-decoration-none">
+			<i class="icon-comment-alt text-dark btn-round-sm font-lg"></i>
+			<span>{{item.post_comments.all|length}} Comment</span></a>
+			</form>						
+		</div>
+		{% else %}
+		<div>
+			<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
+			<a href="{% url 'sns_comments' item.id %}" class="ms-3 text-dark text-decoration-none">
+			<i class="icon-comment-alt text-dark btn-round-sm font-lg"></i>
+			<span>{{item.post_comments.all|length}} Comment</span></a>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/edit.js' %}"></script>
+{% endblock %}

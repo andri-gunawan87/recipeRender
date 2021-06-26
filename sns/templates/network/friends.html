@@ -1,0 +1,98 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block title %}Friends{% endblock %}
+
+{% block side %}
+<div class="col-md-3">
+	<div class="card border mb-3">
+		<div class="user_profile">
+			<img class="profile_img avatar mb-0 mt-2" src="
+			{% if profile_data.user_avatar %}
+			{{ profile_data.user_avatar.url }}"
+			{% else %}
+			{% static 'network/profile.jpg' %}"
+			{% endif %}
+			alt="{{ user }}"><br>
+			<h2 style="text-align: center"><b>{{ user|title }}</b></h2>
+		</div>
+	</div>
+	<div class="card border mb-3 p-2">
+		<div class="sidebar-block custom_font">
+		{% if user.is_authenticated %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <a class="text-decoration-none" href="{% url 'profil' user.id %}">Profile</a><br>
+			<i class="icon-th-large"></i> <a class="text-decoration-none" href="{% url 'all_posts' %}">All Post</a><br>
+			<i class="icon-users"></i> <a class="text-decoration-none" href="{% url 'sns_friends' user.id %}">Friends</a><br>
+			<i class="icon-logout"></i> <a class="text-decoration-none" href="{% url 'sns_logout' %}">Logout</a>
+		{% else %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <span>User</span><br>
+			<i class="icon-th-large"></i> <a class="text-decoration-none" href="#">All Post</a><br>
+			<i class="icon-users"></i> <a class="text-decoration-none" href="#">Friends</a><br>
+			<i class="icon-login"></i> <a class="text-decoration-none" href="{% url 'sns_login' %}">Login</a>
+		{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="col-md-9">
+	<div>
+		<p class="display-4 text-center custom_font"><b>Friends</b></p>
+	</div>
+	<div class="row">
+	{% if friend_list %}
+	{% for item in friend_list %}
+	{% if item.user != request.user %}
+	<div class="card col-md-4 border mb-3">
+		<div class="card-body text-center">
+			<figure class="avatar">
+				{% if item.user.user_a.user_avatar %}
+				<img src="{{ item.user.user_a.user_avatar.url }}" alt="avatar" class="mx-auto d-block rounded-circle img-fluid friend_list_img">
+				{% else %}
+				<img src="{% static 'network/profile.jpg' %}" alt="avatar" class="mx-auto d-block rounded-circle img-fluid friend_list_img">
+				{% endif %}
+			</figure>
+			<div class="clearfix w-100"></div>
+			{% if item.user.get_full_name %}
+			<h4 class="mt-3 mb-0">{{ item.user.get_full_name }}</h4>
+			{% else %}
+			<h4>{{ item.user.username|title }}</h4>
+			{% endif %}
+			<p class="mt-0 mb-3">{{ item.user.user_a.city }}</p>
+			<a href="{% url 'profil' item.user.id %}" class="btn pt-2 pb-2 ps-3 pe-3 d-inline-block rounded-xl bg-success text-white">View Profile</a>
+		</div>
+	</div>
+	{% else %}
+	<div class="card col-md-4 border mb-3">
+		<div class="card-body text-center">
+			<figure class="avatar">
+				{% if item.following.user_a.user_avatar %}
+				<img src="{{ item.following.user_a.user_avatar.url }}" alt="avatar" class="mx-auto d-block rounded-circle img-fluid friend_list_img">
+				{% else %}
+				<img src="{% static 'network/profile.jpg' %}" alt="avatar" class="mx-auto d-block rounded-circle img-fluid friend_list_img">
+				{% endif %}
+			</figure>
+			<div class="clearfix w-100"></div>
+			{% if item.following.get_full_name %}
+			<h4 class="mt-3 mb-0">{{ item.following.get_full_name }}</h4>
+			{% else %}
+			<h4>{{ item.following.username|title }}</h4>
+			{% endif %}
+			<p class="mt-0 mb-3">{{ item.following.user_a.city }}</p>
+			<a href="{% url 'profil' item.following.id %}" class="btn pt-2 pb-2 ps-3 pe-3 d-inline-block rounded-xl bg-success text-white">View Profile</a>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+	{% else %}
+		<div class="card">
+			<h5 class="text-center pt-4">
+			<span>It seem you dont have friend yet!</span><br><br>
+		</div>
+	{% endif %}
+	</div>
+</div>
+{% endblock %}

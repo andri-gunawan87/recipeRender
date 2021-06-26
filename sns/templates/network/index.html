@@ -1,0 +1,221 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block title %}Sns{% endblock %}
+
+{% block side %}
+<div class="col-md-3">
+	<div class="card border mb-3">
+		<div class="user_profile">
+			<img class="profile_img avatar mb-0 mt-2" src="
+			{% if profile_data.user_avatar %}
+			{{ profile_data.user_avatar.url }}"
+			{% else %}
+			{% static 'network/profile.jpg' %}"
+			{% endif %}
+			alt="{{ user }}"><br>
+			<h2 style="text-align: center"><b>{{ user|title }}</b></h2>
+		</div>
+	</div>
+	<div class="card border mb-3 p-2">
+		<div class="sidebar-block custom_font">
+		{% if user.is_authenticated %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <a class="text-decoration-none" href="{% url 'profil' user.id %}">Profile</a><br>
+			<i class="icon-th-large"></i> <a class="text-decoration-none" href="{% url 'all_posts' %}">All Post</a><br>
+			<i class="icon-users"></i> <a class="text-decoration-none" href="{% url 'sns_friends' user.id %}">Friends</a><br>
+			<i class="icon-logout"></i> <a class="text-decoration-none" href="{% url 'sns_logout' %}">Logout</a>
+		{% else %}
+			<i class="icon-home"></i> <a class="text-decoration-none" href="{% url 'sns_index' %}">Home</a><br>
+			<i class="icon-user"></i> <span>Profile</span><br>
+			<i class="icon-th-large"></i> <span>All Post</span><br>
+			<i class="icon-users"></i> <span>Friends</span><br>
+			<i class="icon-login"></i> <a class="text-decoration-none" href="{% url 'sns_login' %}">Login</a>
+		{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block body %}
+		<div class="col-md-6">
+			<div>
+				<p class="display-4 text-center custom_font"><b>All Post</b></p>
+			</div>
+			<div class='card border out_b'>
+				<div class='out_b'>
+					<h6><i class="icon-edit"></i>New Post</h6>
+					<form action="{% url 'sns_index'  %}" method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						<label class="mb-2 text-dark">Description</label>
+						<textarea class="form-control" name="body" rows="2"></textarea>
+						<div class="card mt-3 border-0">
+							<div class="card-body p-0">
+								<div class="form-group mb-0">								
+									<label for="file-upload" class="custom-file-upload">
+										<i class="fa fa-cloud-upload"></i> Insert Image </label>
+									<input type="file" name="image" id="file-upload" class="input-file">
+									<input id="addpost" type="submit" value="POST" class="btn btn-primary pull-right me-4">
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>	
+			</div>
+			{% if allpost %}
+			{% for item in allpost %}
+			<div class='card border out_b'>
+				<div class='out_b'>
+					<div class="card-body p-0 d-flex">
+						<figure class="avatar me-3">
+						{% if item.user.user_a.user_avatar.url %}
+						<img src="{{item.user.user_a.user_avatar.url}}" alt="avater" class="fr_img shadow-sm rounded-circle w45">
+						{% else %}
+						<img src="{% static 'network/profile.jpg' %}" alt="avater" class="fr_img shadow-sm rounded-circle w45">
+						{% endif %}
+						</figure>
+						<h6 class="mt-1">
+						<a href="{% url 'profil' item.user.id %}">
+							<b>{{ item.user }}</b>
+						</a>&nbsp;&nbsp;
+						<span class="d-block mt-1 lh-3"> {{ item.date|date:"j E Y" }}</span></h6>
+						<div class="ms-auto">
+						</div>
+						{% if user.is_authenticated and item.user == user %}
+						<button id="edit_button" class="btn btn-link edit_post" value="{{ item.id }}" type="button">Edit</button>
+						{% endif %}
+					</div>
+					<div>
+					{% if item.image %}
+					<img class="mb-0 mt-2 img-fluid" src="{{ item.image.url }}" alt="{{ user }}">
+					{% endif %}
+					</div>
+					<div class="mb-1" id="post_body_{{ item.id }}">
+						<a class="text-decoration-none text-dark" href="{% url 'sns_comments' item.id %}">
+							{{ item.body }}
+						</a>
+					</div>
+						<form class="post_textarea" id={{ item.id }} action="{% url 'post' item.id %}" method="POST">
+							{% csrf_token %}
+							<textarea name="edit" class="form-control" id="textarea_{{ item.id }}"></textarea>
+							<input id="editpost" type="submit" class="btn btn-primary" value="Edit"/>
+						</form>
+					<div class="mb-3">
+					</div>
+					{% if user.is_authenticated and item.user != user %}
+					<div>
+						<form action="{% url 'like' item.id %}" method="POST">
+						{% csrf_token %}
+						<button name="like" id={{ item.id }} value="like" type="submit" class="cus_btn btn btn-outline-primary" onclick="like_counter({{ item.id }})";><i class="icon-up-open"></i></button>
+						<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
+						<button name="like" id={{ item.id }} value="dislike" type="submit" class="cus_btn btn btn-outline-danger" onclick="dislike_counter({{ item.id }})";><i class="icon-down-open"></i></button>
+						<a href="{% url 'sns_comments' item.id %}" class="ms-3 text-dark  text-decoration-none">
+						<i class="icon-comment-alt text-dark btn-round-sm font-lg"></i>
+						<span>{{item.post_comments.all|length}} Comment</span></a>
+						</form>						
+					</div>
+					{% else %}
+					<div>
+						&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
+						<a href="{% url 'sns_comments' item.id %}" class="ms-3 text-dark  text-decoration-none">
+						<i class="icon-comment-alt text-dark btn-round-sm font-lg"></i>
+						<span>{{item.post_comments.all|length}} Comment</span></a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+			{% else %}
+			<div class="card border out_b">
+				<div class="card-body">
+					<h5 class="text-center">
+					<span>Your Post will appear here</span><br><br>
+					<span>Please Post Something</span></h5>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+		<div class="col-md-3">
+			<div class="card border mb-3">
+				<div class="card-body d-flex align-items-center ps-4 pe-4">
+					<h5 class="mb-0">Friend Request</h5>
+					<a href="{% url 'sns_friends' user.id %}" class="ms-auto text-decoration-none">See all</a>
+				</div>
+				{% if friend_request %}
+				{% for item in friend_request %}
+				<div class="wrap pb-3 border-bottom">
+					<div class="card-body d-flex pt-3 ps-4 pe-4 pb-0 ">
+						<figure class="fr_img avatar me-3">
+						{% if item.user.user_a.user_avatar.url %}
+						<img src="{{item.user.user_a.user_avatar.url}}" alt="avater" class="fr_img shadow-sm rounded-circle">
+						{% else %}
+						<img src="{% static 'network/profile.jpg' %}" alt="avater" class="fr_img shadow-sm rounded-circle">
+						{% endif %}
+						</figure>
+						<a class="text-decoration-none text-dark" href="{% url 'profil' item.user.id %}">
+						{% if item.user.get_full_name %}
+						<h5 class="mt-1">{{item.user.get_full_name|title}}</h5>
+						{% else %}
+						<h5 class="mt-1">{{item.user.username|title}}</h5>
+						{% endif %}
+						</a>
+					</div>
+					<div >
+					<form class="card-body d-flex justify-content-evenly pt-0 ps-4 pe-4" action="{% url 'sns_friends' item.user.id %}" method="POST">
+						{% csrf_token %}
+						<input name="request" type="submit" class="vw-100 p-1 btn-primary rounded-pill" value="Confirm">						
+						<input name="request" type="submit" class="vw-100 p-1 btn-secondary rounded-pill" value="Delete">
+						</form>						
+					</div>
+				</div>
+				{% endfor %}
+				{% else %}
+				<div class="wrap mb-3 text-center">
+				No Friend Request!
+				</div>
+				{% endif %}
+			</div>
+			
+			<div class="card border mb-3">
+				<div class="card-body d-flex align-items-center p-4">
+					<h5 class="mb-0">Confirm Friend</h5>
+				</div>
+				{% if pending_request %}
+				{% for item in pending_request %}
+				<div class="card-body bg-transparent-card d-flex p-3 bg-light bg-gradient ms-3 me-3 rounded-3 mb-3">
+					<figure class="avatar me-2 mb-0">
+					{% if item.following.user_a.user_avatar.url %}
+						<img src="{{item.following.user_a.user_avatar.url}}" alt="avater" class="fr_img shadow-sm rounded-circle">
+						{% else %}
+						<img src="{% static 'network/profile.jpg' %}" alt="avater" class="fr_img shadow-sm rounded-circle">
+						{% endif %}
+					</figure>
+					<h6 class="mt-2">
+					<a class="text-decoration-none text-dark" href="{% url 'profil' item.following.id %}">
+						{% if item.following.get_full_name %}
+						<b class="mt-1">{{item.following.get_full_name|title}}</b>
+						{% else %}
+						<b class="mt-1">{{item.following.username|title}}</b>
+						{% endif %}
+					</a></h6>
+					<a href="/defaultmember" class="btn-round-sm bg-white ms-auto mt-2">
+					<span class="feather-chevron-right font-xss text-grey-900"></span>
+					</a>
+				</div>
+				{% endfor %}
+				{% else %}
+				<div class="wrap mb-3 text-center">
+				No Pending Request!
+				</div>
+				{% endif %}
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/edit.js' %}"></script>
+{% endblock %}

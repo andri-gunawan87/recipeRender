@@ -1,0 +1,47 @@
+{% extends "mail/layout.html" %}
+
+{% block body %}
+	<div class="row">
+		<div class="col-md-4">			
+			<div class="custom_font">
+				<h2>Hi <b>{{ request.user.username }}</b></h2>
+				<span>Inbox</span><br>
+				<span>Compose</span><br>
+				<span>Sent</span><br>
+				<span>Archived</span><br>
+				<a href="{% url 'mail_register' %}">Register</a><br>
+			</div>
+		</div>
+
+		<div class="col-md-8">
+
+			<h2 class="custom_font">Login</h2>
+
+			{% if message %}
+				<div class="alert alert-primary" role="alert">{{ message }}</div>
+			{% endif %}
+
+			<form action="{% url 'mail_login' %}" method="post">
+				{% csrf_token %}
+				<div class="form-group">
+					<input autofocus class="form-control" type="text" name="username" placeholder="Username">
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="password" name="password" placeholder="Password">
+				</div>
+				<input class="btn btn-primary" type="submit" value="Login">
+			</form>
+
+			Don't have an account? <a href="{% url 'mail_register' %}">Register here.</a>
+			<div class="text-justify mt-4 bg-info bg-gradient">
+				This Mail App share same account with Sns app and Resep app.<br>
+				You can login using same account with Sns and Resep app.<br>
+				And if you troublesome with register you can use guest account:<br>
+				<b>Username: emma<br>
+				Password: a</b><br>
+				Plase use Chrome for better experience
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
