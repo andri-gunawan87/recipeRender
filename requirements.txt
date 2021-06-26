@@ -32,8 +32,6 @@ psycopg2==2.9.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2020.5
-PyWavelets==1.1.1
-pyxelate==1.2.1
 requests==2.25.1
 scikit-image==0.16.2
 scikit-learn==0.22.1
