@@ -8,7 +8,7 @@ class User(AbstractUser):
 class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     title = models.TextField()
-    key = models.CharField(max_length = 64)
+    key = models.CharField(max_length = 128)
     image = models.URLField()
     difficulty = models.CharField(max_length = 64)
     times = models.CharField(max_length = 64)

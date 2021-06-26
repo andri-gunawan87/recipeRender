@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-wpfk^ts9q8@j)x+6@kl86j@uydf*7dlrylp189i%388q$h$cmi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['andrigunawanapp.herokuapp.com']
+ALLOWED_HOSTS = ['andrigunawanapp.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -81,13 +81,14 @@ WSGI_APPLICATION = 'recipe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'mail': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mail_data',
-    }
+     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+     'NAME': 'recipe',
+     'USER': 'postgres',
+     'PASSWORD': 'yougothired88',
+     'HOST': 'localhost',
+     'PORT': '',  
+ }
+    
 }
 
 
