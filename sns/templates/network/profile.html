@@ -3,6 +3,7 @@
 {% block title %}{{ user_detail|title }} Profile{% endblock %}
 
 {% block side %}
+
 <div class="col-md-3">
 	<div class="card border mb-3">
 		<div class="user_profile">
@@ -13,7 +14,7 @@
 			{% static 'network/profile.jpg' %}"
 			{% endif %}
 			alt="{{ user }}"><br>
-			<h2 style="text-align: center"><b>{% if user.is_authenticated %}{{ user|title }}{% else %}{{ user_detail }}{% endif %}</b></h2>
+			<h2 style="text-align: center"><b>{% if user.is_authenticated %}{{ user.username|title }}{% else %}{{ user_detail.username }}{% endif %}</b></h2>
 		</div>
 	</div>
 	<div class="card border mb-3 p-2">
@@ -103,17 +104,19 @@
 				{% if user.is_authenticated and user_detail != user %}
 				<form  action="{% url 'follow' %}" method="post">
 					{% csrf_token %}
-						{% if user_detail.id in follow and friend_request.friend_request == False %}
-							<input id="pending" type="hidden" name="pending" value="{{ user_detail.id }}">
-							<input type="submit" class='btn btn-primary' value=
-								"Pending"
-							disabled>			
-						{% elif user_detail.id in follow %}
-							<input id="unfollow" type="hidden" name="unfollow" value="{{ user_detail.id }}">
-							<input type="submit" class='btn btn-primary' value=
-								"Unfollow"
-							>
-						
+						{% if request.user.id in following or request.user.id in follower %}
+							{% if friend %}
+								<input id="unfollow" type="hidden" name="unfollow" value="{{ user_detail.id }}">
+								<input type="submit" class='btn btn-primary' value=
+									"Unfollow"
+								>
+							{% else %}
+								
+								<input id="pending" type="hidden" name="pending" value="{{ user_detail.id }}">
+								<input type="submit" class='btn btn-primary' value=
+									"Pending"
+								disabled>
+							{% endif %}
 						{% else %}
 							<input id="follow" type="hidden" name="follow" value="{{ user_detail.id }}">
 							<input type="submit" class='btn btn-primary' value=

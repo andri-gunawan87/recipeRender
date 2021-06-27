@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 from django.core.paginator import Paginator
@@ -71,17 +71,21 @@ def friends(request, user_id):
             a = Follow.objects.get(user=user_id, following=request.user)
             a.friend_request = True
             a.save()
+            friend_list = Follow.objects.filter(Q(user=request.user) | Q(following=request.user), friend_request=True)
             return render(request, "network/friends.html", {
-                "profile_data": profile_data
+                "profile_data": profile_data,
+                "friend_list": friend_list
                 })
         elif body == "Delete":
             a = Follow.objects.get(user=user_id, following=request.user)
             a.delete()
+            friend_list = Follow.objects.filter(Q(user=request.user) | Q(following=request.user), friend_request=True)
             return render(request, "network/friends.html", {
-                "profile_data": profile_data
+                "profile_data": profile_data,
+                "friend_list": friend_list
                 })            
     else:
-        friend_list = Follow.objects.filter(Q(user=user_id) | Q(following=user_id), friend_request=True)
+        friend_list = Follow.objects.filter(Q(user=user_id) | Q(following=user_id), friend_request=True)    
         return render(request, "network/friends.html", {
             "profile_data": profile_data,
             "friend_list": friend_list
@@ -89,8 +93,8 @@ def friends(request, user_id):
 
 def profil(request, user_id):
     user_detail = User.objects.get(id=user_id)
-    following = Follow.objects.filter(Q(user=user_id) | Q(following=user_id), friend_request=True).values_list("following", flat=True)
-    follower = Follow.objects.filter(following=user_id, friend_request=True).values_list("user", flat=True)
+    following = Follow.objects.filter(user=user_id).values_list("following", flat=True)
+    follower = Follow.objects.filter(following=user_id).values_list("user", flat=True)
     allpost = Post.objects.filter(user=user_id).order_by("-date")
     paginator = Paginator(allpost, 10)
     page = request.GET.get('page', 1)
@@ -98,7 +102,8 @@ def profil(request, user_id):
     if request.user.is_authenticated:
         profile_data = Profile.objects.filter(user = request.user).first()
         friend_request = Follow.objects.filter(user=request.user, following=user_id).first()
-        follow = Follow.objects.filter(user=request.user).values_list("following", flat=True)
+        follow = Follow.objects.filter(Q(user=user_id) | Q(following=user_id), friend_request=True)
+        friend = Follow.objects.filter(Q(user=user_id, following=request.user) | Q(user=request.user, following=user_id), friend_request=True)
         return render(request, "network/profile.html", {
             "allpost": user,
             "user_detail": user_detail,
@@ -106,13 +111,14 @@ def profil(request, user_id):
             "following": following,
             "follower": follower,
             "friend_request": friend_request,
-            "profile_data": profile_data
+            "profile_data": profile_data,
+            "friend": friend
             })
     else:
-        profile_data = Profile.objects.filter(user = user_id).first()
+        profile_data = Profile.objects.filter(user = user_detail).first()
         return render(request, "network/profile.html", {
             "allpost": user,
-            "user_detail": user_id,
+            "user_detail": user_detail,
             "following": following,
             "follower": follower,
             "profile_data": profile_data
@@ -158,19 +164,16 @@ def follow(request):
         })
     else:
         if "follow" in request.POST:        
-            user_id = User.objects.get(id=(request.POST["follow"]))
+            user_id = User.objects.get(id=(request.POST ["follow"]))
             f = Follow(user=user, following=user_id)
             f.save()
-            return render(request, "network/following.html", {
-                "allpost": post
-                })
+            return HttpResponseRedirect(reverse("sns_index"))
         else:
             user_id = User.objects.get(id=(request.POST["unfollow"]))
-            f = Follow.objects.get(user=user, following=user_id)
+            f = Follow.objects.filter(Q(user=user_id, following=user) | Q(user=user, following=user_id))
             f.delete()
-            return render(request, "network/following.html", {
-                "allpost": post
-                })
+            return HttpResponseRedirect(reverse("sns_index"))
+
  
 def account(request):
     user_data = request.user
