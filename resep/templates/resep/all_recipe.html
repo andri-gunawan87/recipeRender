@@ -16,7 +16,7 @@
 		  <p class="user_comment">
 			  {{ comment.comment}}
 		  </p>
-			<p class="username_comments">{{ comment.user }}</p>
+			<a class="comment_text username_comments" href="{% url 'profile' comment.user.id %}">{{ comment.user }}</a>
 	  </div>
 	</li>
 	{% endfor %}
@@ -34,9 +34,9 @@
 				<a href="{% url 'detail' item.id %}">
 				<img class="normal" src="{{item.image}}">
 			</center>
-			<div class="sedikit_info">
-				<p style="line-height:20px">{{ item.title }}</p>
-				<span style="color:green;">Kesulitan: {{ item.difficulty }}</span><br><b>Suka: {{ item.like_count }}</b><br>
+			<div class="sedikit_info" >
+				<p style="line-height:20px;color: #82b440;">{{ item.title }}</p>
+				<span style="color:#82b440;">Kesulitan: {{ item.difficulty }}</span><br><b style="color:#82b440;" >Suka: {{ item.like_count }}</b><br>
 				</a><br>
 			</div>
 		</div>

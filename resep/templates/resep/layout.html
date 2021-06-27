@@ -17,7 +17,7 @@
 						<div class="custom_font custom_navbar"><b>
 							<a href="{% url 'index' %}" class="hyper_link">Home</a><br>
 							{% if user.is_authenticated %}
-							<a href="{% url 'profile' user.id %}" class="hyper_link">{{ user.username }}</a><br>
+							<a href="{% url 'profile' user.id %}" class="hyper_link">{{ user.username|title }}</a><br>
 							{% else %}
 							</b>User<b><br>
 							{% endif %}

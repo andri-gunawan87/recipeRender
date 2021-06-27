@@ -60,6 +60,7 @@ def all_recipe(request):
     })
     
 def profile(request, user_id):
+    user_detail = User.objects.get(id=user_id)
     a = Recipe.objects.filter(user=user_id)
     paginator = Paginator(a, 8)
     page = request.GET.get('page', 1)
@@ -67,10 +68,11 @@ def profile(request, user_id):
     b = Favorite.objects.filter(user=user_id, fav=True)
     c = Comment.objects.filter(user=user_id)
     return render(request, "resep/profile.html", {
+        "user_detail": user_detail,
         "data": user,
         "data_all": a,
         "fav": b,
-        "comments": c
+        "comments": c,
     })
     
 def detail(request, recipe_id):

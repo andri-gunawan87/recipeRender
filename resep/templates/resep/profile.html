@@ -35,11 +35,11 @@
 		</div>
 				
 		<div class="col-sm-8">
-			<p class="custom_font" style="font-size: 4rem;">{{ data_all.0.user }}</p>
+			<p class="custom_font" style="font-size: 4rem;">{{ user_detail.username }}</p>
 			<table class="tab_pad">
 					<tr>
 						<td class="profile_table">Tanggal Bergabung:</td>
-						<td>{{ data_all.0.user.date_joined|date:"D d M Y" }}</a></td>
+						<td>{{ user_detail.date_joined|date:"d M Y" }}</a></td>
 					</tr>
 					<tr>
 						<td>Resep:</td>
@@ -85,7 +85,7 @@
 									</div>
 								{% endfor %}
 							{% else %}
-								Tidak ada Resep Favorit
+								<div class="text-center">Tidak ada Resep Favorit</div>
 							{% endif %}
 							
 							</div>
@@ -118,7 +118,7 @@
 								</div>
 							{% endfor %}
 						{% else %}
-							Tidak ada Resep yang dibuat
+							<div class="text-center mb-1">Belum ada Resep yang dibuat</div>
 						{% endif %}							
 							<hr>
 							<nav aria-label="Page navigation example">
