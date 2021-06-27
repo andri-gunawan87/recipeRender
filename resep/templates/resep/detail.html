@@ -70,15 +70,15 @@
 						<form action="{% url 'like' data.id %}" method="POST">
 						{% csrf_token %}
 						{% if likes.like == True %}
-							<button name="like" id="like_dis" value="like" type="submit" class="btn btn-outline-primary" onclick="like_counter({{ data.id }})"; disabled/><i class="icon-up-open"></i></button>
+							<button name="like" id="like_dis" value="like" type="submit" class="btn btn-outline-primary like" onclick="like_counter({{ data.id }})"; disabled/><i class="icon-up-open"></i></button>
 						{% else %}
-							<button name="like" id="like_en" value="like" type="submit" data-toggle="button" class="btn btn-outline-primary" onclick="like_counter({{ data.id }})";/><i class="icon-up-open"></i></button>
+							<button name="like" id="like_en" value="like" type="submit" data-toggle="button" class="btn btn-outline-primary like" onclick="like_counter({{ data.id }})";/><i class="icon-up-open"></i></button>
 						{% endif %}
 							<span id="like_{{ data.id }}">{{ data.like_count }}</span>
 						{% if likes.dislike == True %}
-							<button name="like" id="dislike_dis" value="dislike" type="submit" class="btn btn-outline-danger" onclick="dislike_counter({{ data.id }})"; disabled><i class="icon-down-open"></i></button>
+							<button name="like" id="dislike_dis" value="dislike" type="submit" class="btn btn-outline-danger dislike" onclick="dislike_counter({{ data.id }})"; disabled><i class="icon-down-open"></i></button>
 						{% else %}
-							<button name="like" id="dislike_en" value="dislike" type="submit" class="btn btn-outline-danger" onclick="dislike_counter({{ data.id }})";><i class="icon-down-open"></i></button>
+							<button name="like" id="dislike_en" value="dislike" type="submit" data-toggle="button" class="btn btn-outline-danger dislike" onclick="dislike_counter({{ data.id }})";><i class="icon-down-open"></i></button>
 						{% endif %}
 							</form>
 					</div>

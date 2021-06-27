@@ -31,6 +31,8 @@ function like_counter(id)  {
 				console.log(post.like);
 				let counter = post.like
 				document.querySelector('#like_'+`${id}`).innerHTML = counter + 1;
+				document.querySelector('.like'+`${id}`).disabled = true;
+				document.querySelector('.dislike'+`${id}`).disabled = false;
 			})
 			
 	};
@@ -42,6 +44,8 @@ function dislike_counter(id)  {
 			console.log(post.like);
 			let counter = post.like
 			document.querySelector('#like_'+`${id}`).innerHTML = counter - 1;
+			document.querySelector('.dislike'+`${id}`).disabled = true;
+			document.querySelector('.like'+`${id}`).disabled = false;
 		})
 		
 };

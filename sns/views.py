@@ -54,7 +54,7 @@ def index(request):
             
 def all_posts(request):
     profile_data = Profile.objects.filter(user = request.user).first()
-    allpost = Post.objects.all()
+    allpost = Post.objects.all().order_by("date")
     paginator = Paginator(allpost, 10)
     page = request.GET.get('page', 1)
     user = paginator.page(page)
@@ -88,7 +88,7 @@ def friends(request, user_id):
             })
 
 def profil(request, user_id):
-    user_id = User.objects.get(id=user_id)
+    user_detail = User.objects.get(id=user_id)
     following = Follow.objects.filter(Q(user=user_id) | Q(following=user_id), friend_request=True).values_list("following", flat=True)
     follower = Follow.objects.filter(following=user_id, friend_request=True).values_list("user", flat=True)
     allpost = Post.objects.filter(user=user_id).order_by("-date")
@@ -101,7 +101,7 @@ def profil(request, user_id):
         follow = Follow.objects.filter(user=request.user).values_list("following", flat=True)
         return render(request, "network/profile.html", {
             "allpost": user,
-            "user_detail": user_id,
+            "user_detail": user_detail,
             "follow": follow,
             "following": following,
             "follower": follower,
@@ -137,10 +137,14 @@ def like(request, post_id):
         body = request.POST["like"]
         if body == "like":
             post.like_count += 1
+            post.like = True
+            post.dislike = False
             post.save()
             return HttpResponse(status=204)
         else:
             post.like_count -= 1
+            post.like = False
+            post.dislike = True
             post.save()
             return HttpResponse(status=204)
 

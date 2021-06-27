@@ -104,11 +104,19 @@
 					</div>
 					{% if user.is_authenticated and item.user != user %}
 					<div>
-						<form action="{% url 'like' item.id %}" method="POST">
+						<form action="{% url 'sns_like' item.id %}" method="POST">
 						{% csrf_token %}
-						<button name="like" id={{ item.id }} value="like" type="submit" class="cus_btn btn btn-outline-primary" onclick="like_counter({{ item.id }})";><i class="icon-up-open"></i></button>
+						{% if item.like == True %}
+						<button name="like" id="dis_up_{{ item.id }}" value="like" type="submit" class="cus_btn btn btn-outline-primary like{{item.id}}" onclick="like_counter({{ item.id }})" disabled><i class="icon-up-open"></i></button>
+						{% else %}
+						<button name="like" id="up_{{ item.id }}" value="like" type="submit" class="cus_btn btn btn-outline-primary like{{item.id}}" onclick="like_counter({{ item.id }})";><i class="icon-up-open"></i></button>
+						{% endif %}
 						<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;
-						<button name="like" id={{ item.id }} value="dislike" type="submit" class="cus_btn btn btn-outline-danger" onclick="dislike_counter({{ item.id }})";><i class="icon-down-open"></i></button>
+						{% if item.dislike == True %}
+						<button name="like" id="dis_down_{{ item.id }}" value="dislike" type="submit" class="cus_btn btn btn-outline-danger dislike{{item.id}}" onclick="dislike_counter({{ item.id }})" disabled><i class="icon-down-open"></i></button>
+						{% else %}
+						<button name="like" id="down_{{ item.id }}" value="dislike" type="submit" class="cus_btn btn btn-outline-danger dislike{{item.id}}" onclick="dislike_counter({{ item.id }})";><i class="icon-down-open"></i></button>
+						{% endif %}
 						<a href="{% url 'sns_comments' item.id %}" class="ms-3 text-dark  text-decoration-none">
 						<i class="icon-comment-alt text-dark btn-round-sm font-lg"></i>
 						<span>{{item.post_comments.all|length}} Comment</span></a>
@@ -198,7 +206,7 @@
 						<b class="mt-1">{{item.following.username|title}}</b>
 						{% endif %}
 					</a></h6>
-					<a href="/defaultmember" class="btn-round-sm bg-white ms-auto mt-2">
+					<a href="{% url 'profil' item.following.id %}" class="btn-round-sm bg-white ms-auto mt-2">
 					<span class="feather-chevron-right font-xss text-grey-900"></span>
 					</a>
 				</div>

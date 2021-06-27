@@ -19,7 +19,7 @@
 			</div>
 			{% if user.is_authenticated %}
 			<div>
-				<form action="{% url 'like' item.id %}" method="POST">
+				<form action="{% url 'sns_like' item.id %}" method="POST">
 				{% csrf_token %}
 				<input name="like" id={{ item.id }} value="like" type="submit" class="btn btn-light" onclick="like_counter(this.id)";/>
 				<i class="fa fa-heart" style="font-size:12px;color:red"></i><span id="like_{{ item.id }}">{{ item.like_count }}</span>&nbsp;

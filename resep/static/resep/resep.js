@@ -42,8 +42,10 @@ function like_counter(id)  {
 				console.log(post.like);
 				let counter = post.like
 				document.querySelector('#like_'+`${id}`).innerHTML = counter + 1;				
-				document.querySelector("#like_en").className = 'btn btn-primary active';
-				document.querySelector("#like_en").disabled = true;
+				document.querySelector(".like").className = 'btn btn-primary active like';
+				document.querySelector(".like").disabled = true;
+				document.querySelector(".dislike").disabled = false;
+				document.querySelector(".dislike").className = 'btn btn-outline-danger dislike';
 			})
 			
 	};
@@ -55,8 +57,10 @@ function dislike_counter(id)  {
 			console.log(post.like);
 			let counter = post.like
 			document.querySelector('#like_'+`${id}`).innerHTML = counter - 1;
-			document.querySelector("#like_en").className = 'btn btn-primary active';
-			document.querySelector("#dislike_en").disabled = true;
+			document.querySelector(".dislike").className = 'btn btn-danger active dislike';
+			document.querySelector(".dislike").disabled = true;
+			document.querySelector(".like").disabled = false;
+			document.querySelector(".like").className = 'btn btn-outline-primary like';
 			})
 		};
 
