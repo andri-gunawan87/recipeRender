@@ -36,7 +36,7 @@ function toggleEllipsis() {
 }
 
 function like_counter(id)  {
-		fetch('/like/'+`${id}`)
+		fetch('like/'+`${id}`)
 			.then(response => response.json())
 			.then(post => {
 				console.log(post.like);
@@ -51,7 +51,7 @@ function like_counter(id)  {
 	};
 	
 function dislike_counter(id)  {
-	fetch('/like/'+`${id}`)
+	fetch('like/'+`${id}`)
 		.then(response => response.json())
 		.then(post => {
 			console.log(post.like);

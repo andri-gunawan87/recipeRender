@@ -37,12 +37,18 @@ def new_recipe(request):
         image = request.POST["rec_img"],
         difficulty = request.POST["rec_dif"],
         times = request.POST["rec_time"],
-        desc = request.POST["rec_name"],
+        desc = request.POST["rec_desc"],
         ingredient = d,
         step = e,
         )
-        f.save()
-        return HttpResponseRedirect(reverse("index"))       
+        if request.POST["rec_name"] != "" and request.POST["rec_desc"] != "":
+            f.save()
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "resep/new_recipe.html", {
+            "message":"Please Fill all the field form below",
+            "data": c
+            })
     else:
         return render(request, "resep/new_recipe.html", {
         "data": c

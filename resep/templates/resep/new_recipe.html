@@ -35,6 +35,9 @@
 <div class="col-md-8"> 
 	<p class="custom_font">New Recipe</p>
 	<br>
+	{% if message %}
+		<div class="alert alert-primary" role="alert">{{ message }}</div>
+	{% endif %}
 	{% if user.is_authenticated %}
 	<div class="logincontainer">
 		<form method="post" action="{% url 'new_recipe' %}">
@@ -59,16 +62,16 @@
 				<tr>
 					<td>Deskripsi</td>
 					<td>
-					<textarea id="rec_desc" name="rec_desc" rows="4" style="width: 100%;" placeholder=" Deskripsi Resep"></textarea>
+					<textarea id="rec_desc" class="form-control" name="rec_desc" rows="4" style="width: 100%;" placeholder=" Deskripsi Resep"></textarea>
 				</tr>
 			</table>
 			<div class="row" style="margin-bottom: 20px">
 				<div class="col-md-5">
 					<p class="form_bahan">Bahan-bahan</p>
 					<div id="ingadd" name="ingadd" type="1">
-						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 1">
-						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 2">
-						<input class="form_bahan_list" type="text" name="ing" placeholder="Bahan 3">
+						<input class="form_bahan_list form-control" type="text" name="ing" placeholder="Bahan 1">
+						<input class="form_bahan_list form-control" type="text" name="ing" placeholder="Bahan 2">
+						<input class="form_bahan_list form-control" type="text" name="ing" placeholder="Bahan 3">
 					</div>					
 					<button id="ingbtn" class="btn btn-secondary" type="button">Tambah Bahan</button>
 				</div>
@@ -76,9 +79,9 @@
 				<div class="col-md-7">
 				<p class="form_bahan">Langkah Penyajian</p></p>
 					<div id="stepadd" type="1">
-						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 1"></textarea>
-						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 2"></textarea>
-						<textarea class="form_bahan_list" type="text" name="step" placeholder="Langkah 3"></textarea>
+						<textarea class="form_bahan_list form-control" type="text" name="step" placeholder="Langkah 1"></textarea>
+						<textarea class="form_bahan_list form-control" type="text" name="step" placeholder="Langkah 2"></textarea>
+						<textarea class="form_bahan_list form-control" type="text" name="step" placeholder="Langkah 3"></textarea>
 					</div>					
 					<div >
 					</div>
@@ -94,4 +97,8 @@
 	</div>
 	{% endif %}
 </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'resep/new_recipe.js' %}"></script>
 {% endblock %}
