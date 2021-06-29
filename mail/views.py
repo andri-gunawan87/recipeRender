@@ -144,6 +144,8 @@ def login_view(request):
             return render(request, "mail/login.html", {
                 "message": "Invalid email and/or password."
             })
+    elif request.user.is_authenticated:
+        return render(request, "mail/inbox.html")
     else:
         return render(request, "mail/login.html")
 
@@ -181,5 +183,7 @@ def register(request):
             })
         login(request, user)
         return HttpResponseRedirect(reverse("mail_index"))
+    elif request.user.is_authenticated:
+        return render(request, "mail/inbox.html")
     else:
         return render(request, "mail/register.html")
