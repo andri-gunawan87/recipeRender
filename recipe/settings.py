@@ -85,14 +85,24 @@ WSGI_APPLICATION = 'recipe.wsgi.application'
 DATABASES = {
     'default': {
      'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     'NAME': 'recipe',
-     'USER': 'postgres',
-     'PASSWORD': 'yougothired88',
-     'HOST': 'localhost',
-     'PORT': '',  
+     'NAME': 'postgres',
+     'USER': 'postgres.tpenzdfjizpygkqyqvef',
+     'PASSWORD': 'UKYlF50SzXgoKNe8',
+     'HOST': 'aws-0-us-west-1.pooler.supabase.com',
+     'PORT': '5432',  
  }
     
 }
+
+
+# Old database using sqlite3
+# DATABASES = {
+    # 'default': {
+     # 'ENGINE': 'django.db.backends.sqlite3',
+     # 'NAME': BASE_DIR / 'db.sqlite3',
+ # }
+    
+# }
 
 
 # Password validation

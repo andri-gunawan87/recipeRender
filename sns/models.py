@@ -9,8 +9,8 @@ class Post(models.Model):
     like_count = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='user_image', blank=True)
-    like = models.BooleanField(default=False)
-    dislike = models.BooleanField(default=False)
+    # like = models.BooleanField(default=False)
+    # dislike = models.BooleanField(default=False)
     
     def serialize(self):
         return {
